@@ -11,7 +11,7 @@ El proyecto consiste en diseñar y desarrollar progresivamente una base de datos
 | Integrante | Código/ID | Correo institucional |
 |---|---|---|
 | Juan Sebastian Cardenas Tuberquia | XXXXX | juan.cardenas@usantotomas.edu.co |
-| Juan David Segura | XXXXX | juan.penuelaseg@usantotomas.edu.co |
+| Juan David Segura Peñuela | XXXXX | juan.penuelaseg@usantotomas.edu.co |
 
 ---
 
