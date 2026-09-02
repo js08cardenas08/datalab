@@ -1,5 +1,5 @@
 # Diccionario de datos
-
+# Diccionario de Datos — DataLab
 
 ## CIENTIFICO_DATOS
 
@@ -55,3 +55,59 @@
 | nombre        | Simple           | —              |
 | valor         | Simple           | —              |
 | fecha_calculo | Simple           | —              |
+
+# DICCIONARIO DE DATOS SEMANA 2 ACTUALIZADO
+
+
+## CIENTIFICO DE DATOS 
+| Atributo      | Tipo de dato preliminar | PK | FK |
+| ------------- | ----------------------- | -- | -- |
+| id_cientifico | INT                     | Sí | No |
+| nombre        | VARCHAR                 | No | No |
+| correo        | VARCHAR                 | No | No |
+| especialidad  | VARCHAR                 | No | No |
+
+## PROYECTO
+| Atributo         | Tipo de dato preliminar | PK | FK |
+| ---------------- | ----------------------- | -- | -- |
+| id_proyecto      | INT                     | Sí | No |
+| nombre           | VARCHAR                 | No | No |
+| problema_negocio | TEXT                    | No | No |
+| descripcion      | TEXT                    | No | No |
+
+
+## DATASET
+| Atributo     | Tipo de dato preliminar | PK | FK |
+| ------------ | ----------------------- | -- | -- |
+| id_dataset   | INT                     | Sí | No |
+| nombre       | VARCHAR                 | No | No |
+| fuente       | VARCHAR                 | No | No |
+| fecha_carga  | DATE                    | No | No |
+| tamano_filas | INT                     | No | No |
+
+
+## EXPERIMENTO
+| Atributo               | Tipo de dato preliminar | PK | FK |
+| ---------------------- | ----------------------- | -- | -- |
+| id_experimento_interno | INT                     | Sí | No |
+| nombre_experimento     | VARCHAR                 | No | No |
+| fecha_ejecucion        | DATE                    | No | No |
+| configuracion          | TEXT                    | No | No |
+
+## MODELO 
+
+| Atributo  | Tipo de dato preliminar | PK | FK |
+| --------- | ----------------------- | -- | -- |
+| id_modelo | INT                     | Sí | No |
+| nombre    | VARCHAR                 | No | No |
+| version   | VARCHAR                 | No | No |
+| algoritmo | VARCHAR                 | No | No |
+
+## METRICA 
+
+| Atributo      | Tipo de dato preliminar | PK | FK |
+| ------------- | ----------------------- | -- | -- |
+| id_metrica    | INT                     | Sí | No |
+| nombre        | VARCHAR                 | No | No |
+| valor         | DECIMAL                 | No | No |
+| fecha_calculo | DATE                    | No | No |
