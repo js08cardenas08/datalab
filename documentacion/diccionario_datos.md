@@ -3,11 +3,11 @@
 
 ## CIENTIFICO_DATOS
 
-| Atributo      | Tipo de atributo | Llave           | Not Null | Restricciones                             |
-| ------------- | ---------------- | --------------- | -------- | -------------                             |
-| id_cientifico | Simple           | Llave primaria  | No       | no se permiten letras                     |
-| nombre        | Simple           | —               | No       | no se permiten numeros                    |
-| correo        | Simple           | Llave candidata | No       | no se pemiten correso no correspondientes |
+| Atributo      | Tipo de atributo | Llave           |
+| ------------- | ---------------- | --------------- |
+| id_cientifico | Simple           | Llave primaria  |
+| nombre        | Simple           | NO              |
+| correo        | Simple           | Llave candidata |
 | especialidad  | Simple           | —               |
 
 ## PROYECTO
@@ -60,54 +60,54 @@
 
 
 ## CIENTIFICO DE DATOS 
-| Atributo      | Tipo de dato preliminar | PK | FK |
-| ------------- | ----------------------- | -- | -- |
-| id_cientifico | INT                     | Sí | No |
-| nombre        | VARCHAR                 | No | No |
-| correo        | VARCHAR                 | No | No |
-| especialidad  | VARCHAR                 | No | No |
+| Atributo      | Tipo de dato preliminar | PK | FK | Not Null | Restricciones                             |
+| ------------- | ----------------------- | -- | -- | -------- | ----------------------------------------- |
+| id_cientifico | INT                     | Sí | No | Si       | No se permiten letras                     |
+| nombre        | VARCHAR                 | No | No | Si       | No se permiten numeros                    |
+| correo        | VARCHAR                 | No | No | Si       | No se pemiten correos no correspondientes |
+| especialidad  | VARCHAR                 | No | No | --       | --                                        |
 
 ## PROYECTO
-| Atributo         | Tipo de dato preliminar | PK | FK |
-| ---------------- | ----------------------- | -- | -- |
-| id_proyecto      | INT                     | Sí | No |
-| nombre           | VARCHAR                 | No | No |
-| problema_negocio | TEXT                    | No | No |
-| descripcion      | TEXT                    | No | No |
+| Atributo         | Tipo de dato preliminar | PK | FK | Not Null | Restricciones                             |
+| ---------------- | ----------------------- | -- | -- | -------- | ----------------------------------------- |
+| id_proyecto      | INT                     | Sí | No | Si       | No se permiten letras                     |
+| nombre           | VARCHAR                 | No | No | Si       | No se permiten numeros                    |
+| problema_negocio | TEXT                    | No | No | --       | --                                        |
+| descripcion      | TEXT                    | No | No | --       | --                                        |
 
 
 ## DATASET
 | Atributo     | Tipo de dato preliminar | PK | FK | Not null | Restricciones           |
 | ------------ | ----------------------- | -- | -- | --       | --                      |
-| id_dataset   | INT                     | Sí | No | No       | 
-| nombre       | VARCHAR                 | No | No | No       | No se permiten numeros 
-| fuente       | VARCHAR                 | No | No | No       | 
-| fecha_carga  | DATE                    | No | No | 
-| tamano_filas | INT                     | No | No |
+| id_dataset   | INT                     | Sí | No | Si       | No se permiten letras   |
+| nombre       | VARCHAR                 | No | No | No       | No se permiten numeros  |
+| fuente       | VARCHAR                 | No | No | No       | --                      |
+| fecha_carga  | DATE                    | No | No | --       | --                      |
+| tamano_filas | INT                     | No | No | --       | --                      |
 
 
 ## EXPERIMENTO
-| Atributo               | Tipo de dato preliminar | PK | FK |
-| ---------------------- | ----------------------- | -- | -- |
-| id_experimento_interno | INT                     | Sí | No |
-| nombre_experimento     | VARCHAR                 | No | No |
-| fecha_ejecucion        | DATE                    | No | No |
-| configuracion          | TEXT                    | No | No |
+| Atributo               | Tipo de dato preliminar | PK | FK | Not Null | Restricciones               |
+| ---------------------- | ----------------------- | -- | -- | -------- | --------------------------- |
+| id_experimento_interno | INT                     | Sí | No | Si       | No se permiten letras       |
+| nombre_experimento     | VARCHAR                 | No | No | --       | --                          |
+| fecha_ejecucion        | DATE                    | No | No | --       | --                          |
+| configuracion          | TEXT                    | No | No | --       | --                          |
 
 ## MODELO 
 
-| Atributo  | Tipo de dato preliminar | PK | FK |
-| --------- | ----------------------- | -- | -- |
-| id_modelo | INT                     | Sí | No |
-| nombre    | VARCHAR                 | No | No |
-| version   | VARCHAR                 | No | No |
-| algoritmo | VARCHAR                 | No | No |
+| Atributo  | Tipo de dato preliminar | PK | FK | Not Null | Restricciones               |
+| --------- | ----------------------- | -- | -- | -------- | --------------------------- |
+| id_modelo | INT                     | Sí | No | si       | No se permiten letras       |
+| nombre    | VARCHAR                 | No | No | --       | --                          |
+| version   | VARCHAR                 | No | No | --       | --                          |
+| algoritmo | VARCHAR                 | No | No | --       | --                          |
 
 ## METRICA 
 
-| Atributo      | Tipo de dato preliminar | PK | FK |
-| ------------- | ----------------------- | -- | -- |
-| id_metrica    | INT                     | Sí | No |
-| nombre        | VARCHAR                 | No | No |
-| valor         | DECIMAL                 | No | No |
-| fecha_calculo | DATE                    | No | No |
+| Atributo      | Tipo de dato preliminar | PK | FK | Not Null | Restricciones               |
+| ------------- | ----------------------- | -- | -- | -------- | --------------------------- |
+| id_metrica    | INT                     | Sí | No | si       | --                          |
+| nombre        | VARCHAR                 | No | No | --       | --                          |
+| valor         | DECIMAL                 | No | No | --       | --                          |
+| fecha_calculo | DATE                    | No | No | --       | --                          |
