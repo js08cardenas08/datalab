@@ -3,11 +3,11 @@
 
 ## CIENTIFICO_DATOS
 
-| Atributo      | Tipo de atributo | Llave           |
-| ------------- | ---------------- | --------------- |
-| id_cientifico | Simple           | Llave primaria  |
-| nombre        | Simple           | —               |
-| correo        | Simple           | Llave candidata |
+| Atributo      | Tipo de atributo | Llave           | Not Null | Restricciones                             |
+| ------------- | ---------------- | --------------- | -------- | -------------                             |
+| id_cientifico | Simple           | Llave primaria  | No       | no se permiten letras                     |
+| nombre        | Simple           | —               | No       | no se permiten numeros                    |
+| correo        | Simple           | Llave candidata | No       | no se pemiten correso no correspondientes |
 | especialidad  | Simple           | —               |
 
 ## PROYECTO
@@ -77,12 +77,12 @@
 
 
 ## DATASET
-| Atributo     | Tipo de dato preliminar | PK | FK |
-| ------------ | ----------------------- | -- | -- |
-| id_dataset   | INT                     | Sí | No |
-| nombre       | VARCHAR                 | No | No |
-| fuente       | VARCHAR                 | No | No |
-| fecha_carga  | DATE                    | No | No |
+| Atributo     | Tipo de dato preliminar | PK | FK | Not null | Restricciones           |
+| ------------ | ----------------------- | -- | -- | --       | --                      |
+| id_dataset   | INT                     | Sí | No | No       | 
+| nombre       | VARCHAR                 | No | No | No       | No se permiten numeros 
+| fuente       | VARCHAR                 | No | No | No       | 
+| fecha_carga  | DATE                    | No | No | 
 | tamano_filas | INT                     | No | No |
 
 
