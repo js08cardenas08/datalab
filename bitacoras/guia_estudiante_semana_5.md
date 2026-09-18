@@ -408,23 +408,23 @@ Para cada prueba, registren:
 
 | # | Prueba | Resultado esperado | Resultado real | Mensaje / error exacto | Restricción involucrada | ¿Coincidió con Semana 3/4? | Observaciones |
 |---|---|---|---|---|---|---|---|
+| 1 | `INSERT` válido `cientifico_datos` + `proyecto` | INSERT válido cientifico_datos + proyecto | 2 filas insertadas correctamente | — | — |SI | Las inserciones se realizaron sin errores.|
+| 2 | `INSERT` `experimento` con `id_proyecto=999` | La inserción fue rechazada | | Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails | `fk_experimento_proyecto` |SI |Se rechazó porque el proyecto con ID 999 no existe. |
+| 3 | `INSERT` válido `experimento` + `modelo` | 2 filas insertadas correctamente | | — | — |SI |Se insertaron correctamente el experimento y el modelo usando los IDs existentes. |
+| 4 | `INSERT` `metrica` con `valor=1.5` | La inserción fue rechazada | |Error Code: 3819. Check constraint 'chk_metrica_valor' is violated. | `chk_metrica_valor` | SI | El valor 1.5 está fuera del rango permitido de 0 a 1.|
+| 5 | `DELETE` `proyecto` con hijos | El borrado fue rechazado | Error Code: 1451. Cannot delete or update a parent row: a foreign key constraint fails| | `fk_experimento_proyecto` | SI | No se permitió eliminar el proyecto porque tiene un experimento asociado. |
+| 6 | `DELETE` `modelo` con métrica | no ejecutada | | — | `fk_metrica_modelo` | | Prueba de referencia. No se ejecutó para conservar los datos para las siguientes semanas.|
+
+### 4.5 Tabla de resultados — SQL Server
+
+| # | Prueba | Resultado esperado | Resultado real | Mensaje / error exacto | Restricción involucrada | ¿Coincidió con Semana 3/4? | Observaciones |
+|---|---|---|---|---|---|---|---|
 | 1 | `INSERT` válido `cientifico_datos` + `proyecto` |  | | — | — | | |
 | 2 | `INSERT` `experimento` con `id_proyecto=999` |  | | | `fk_experimento_proyecto` | | |
 | 3 | `INSERT` válido `experimento` + `modelo` |  | | — | — | | |
 | 4 | `INSERT` `metrica` con `valor=1.5` |  | | | `chk_metrica_valor` | | |
 | 5 | `DELETE` `proyecto` con hijos |  | | | `fk_experimento_proyecto` | | |
 | 6 | `DELETE` `modelo` con métrica |  | | — | `fk_metrica_modelo` | | |
-
-### 4.5 Tabla de resultados — SQL Server
-
-| # | Prueba | Resultado esperado | Resultado real | Mensaje / error exacto | Restricción involucrada | ¿Coincidió con Semana 3/4? | Observaciones |
-|---|---|---|---|---|---|---|---|
-| 1 | `INSERT` válido `cientifico_datos` + `proyecto` | Las dos inserciones deben realizarse correctamente. | Sí, se insertaron correctamente. | (1 fila afectada) en cada inserción. | — | Sí | Las inserciones válidas se realizaron sin error. |
-| 2 | `INSERT` `experimento` con `id_proyecto=999` | Debe fallar porque el proyecto 999 no existe. | Falló, como se esperaba. | The INSERT statement conflicted with the FOREIGN KEY constraint "fk_experimento_proyecto". The conflict occurred in database "datalab", table "dbo.proyecto", column 'id_proyecto'. The statement has been terminated. | `fk_experimento_proyecto` | Sí | Se comprobó la integridad referencial de la FK. |
-| 3 | `INSERT` válido `experimento` + `modelo` | Ambas inserciones deben realizarse correctamente.  | Sí, se realizaron correctamente. | (1 fila afectada) en cada inserción. | — | Sí | El experimento válido permitió posteriormente crear el modelo asociado. |
-| 4 | `INSERT` `metrica` con `valor=1.5` | Debe fallar porque 1.5 está fuera del rango permitido de 0 a 1. | Falló, como se esperaba. | The INSERT statement conflicted with the CHECK constraint "chk_metrica_valor". The conflict occurred in database "datalab", table "dbo.metrica", column 'valor'. The statement has been terminated. | `chk_metrica_valor` | Sí | Se comprobó que la restricción CHECK impide valores fuera del rango establecido. |
-| 5 | `DELETE` `proyecto` con hijos | Debe fallar porque existen experimentos asociados y la FK utiliza NO ACTION. | Falló, como se esperaba. | The DELETE statement conflicted with the REFERENCE constraint "fk_experimento_proyecto". The conflict occurred in database "datalab", table "dbo.experimento", column 'id_proyecto'. The statement has been terminated. | `fk_experimento_proyecto` | Sí | Se comprobó que no se puede eliminar el proyecto mientras tenga registros dependientes. |
-| 6 | `DELETE` `modelo` con métrica | Debe eliminar el modelo y las métricas asociadas automáticamente mediante CASCADE. | No ejecutada. | — | `fk_metrica_modelo` | Pendiente | La prueba debe ejecutarse con una métrica válida asociada al modelo para comprobar el ON DELETE CASCADE.  |
 
 ### 4.6 Comparación entre motores
 
