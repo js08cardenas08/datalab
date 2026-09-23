@@ -89,14 +89,18 @@ correo
 ### Tipo de consulta
 
 ```text
-☐ Una tabla
-☐ Varias tablas
+1 Una tabla
+0 Varias tablas
 ```
 
 ### Consulta SQL
 
 ```sql
--- Escriba aquí la consulta SQL
+USE datalab;
+GO
+
+SELECT id_cientifico, nombre, correo_institucional
+FROM cientifico_datos;
 ```
 
 ### Resultado esperado
@@ -104,7 +108,7 @@ correo
 Describa brevemente qué información debería devolver la consulta.
 
 ```text
-[Escriba aquí]
+Listado de los científicos de datos registrados, mostrando su identificador, nombre y correo.
 ```
 
 ---
@@ -136,20 +140,24 @@ descripcion
 ### Tipo de consulta
 
 ```text
-☐ Una tabla
-☐ Varias tablas
+1 Una tabla
+0 Varias tablas
 ```
 
 ### Consulta SQL
 
 ```sql
--- Escriba aquí la consulta SQL
+USE datalab;
+GO
+
+SELECT id_proyecto, nombre_proyecto, descripcion
+FROM proyecto;
 ```
 
 ### Resultado esperado
 
 ```text
-[Escriba aquí]
+Listado de los proyectos registrados, mostrando su identificador, nombre y descripción.
 ```
 
 ---
@@ -181,20 +189,24 @@ fuente
 ### Tipo de consulta
 
 ```text
-☐ Una tabla
-☐ Varias tablas
+1 Una tabla
+0 Varias tablas
 ```
 
 ### Consulta SQL
 
 ```sql
--- Escriba aquí la consulta SQL
+USE datalab;
+GO
+
+SELECT id_dataset, nombre, fuente
+FROM dataset;
 ```
 
 ### Resultado esperado
 
 ```text
-[Escriba aquí]
+Listado de los datasets registrados junto con su identificador, nombre y fuente.
 ```
 
 ---
@@ -227,20 +239,24 @@ fecha_ejecucion
 ### Tipo de consulta
 
 ```text
-☐ Una tabla
-☐ Varias tablas
+1 Una tabla
+0 Varias tablas
 ```
 
 ### Consulta SQL
 
 ```sql
--- Escriba aquí la consulta SQL
+USE datalab;
+GO
+
+SELECT id_experimento, id_proyecto, id_cientifico, fecha_ejecucion
+FROM experimento;
 ```
 
 ### Resultado esperado
 
 ```text
-[Escriba aquí]
+Listado de los experimentos registrados, mostrando el proyecto, el científico asociado y la fecha de ejecución.
 ```
 
 ---
@@ -273,20 +289,24 @@ algoritmo
 ### Tipo de consulta
 
 ```text
-☐ Una tabla
-☐ Varias tablas
+1 Una tabla
+0 Varias tablas
 ```
 
 ### Consulta SQL
 
 ```sql
--- Escriba aquí la consulta SQL
+USE datalab;
+GO
+
+SELECT id_modelo, nombre, version, algoritmo
+FROM modelo;
 ```
 
 ### Resultado esperado
 
 ```text
-[Escriba aquí]
+Listado de los modelos registrados junto con su nombre, versión y algoritmo utilizado.
 ```
 
 ---
