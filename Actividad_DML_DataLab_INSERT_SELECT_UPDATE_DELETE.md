@@ -307,36 +307,36 @@ Crea:
 
 ```text
 Nombre:
-[ ]
+Laura Gomez 
 
 Correo:
-[ ]
+laura.gomez.dml@datalab.com 
 ```
 
 ### 11.2 Un proyecto
 
 ```text
 Nombre:
-[ ]
+Proyecto CRUD DataLab
 
 Descripción:
-[ ]
+Proyecto creado para practicar operaciones DML en DataLab.
 ```
 
 ### 11.3 Un dataset
 
 ```text
 Nombre:
-[ ]
+Dataset CRUD DataLab
 
 Fuente:
-[ ]
+externa
 
 Fecha de carga:
-[ ]
+2026-09-24
 
 Tamaño de filas:
-[ ]
+1000
 ```
 
 ### 11.4 Un experimento
@@ -344,8 +344,17 @@ Tamaño de filas:
 Debe utilizar IDs existentes de:
 
 ```text
-proyecto
-cientifico_datos
+Proyecto:
+Proyecto CRUD DataLab
+
+Científico:
+Laura Gomez
+
+Fecha:
+2026-09-24
+
+Configuración:
+Configuracion inicial del experimento.
 ```
 
 Después de cada `INSERT`, utiliza `SELECT` para verificar.
@@ -499,6 +508,9 @@ SQL Server puede impedir la operación si existen registros relacionados y la po
 Debemos preguntarnos:
 
 > **¿Qué otros datos dependen del registro que quiero eliminar?**
+
+> En nuestro modelo, un proyecto puede tener experimentos relacionados mediante id_proyecto. Además, participacion relaciona científicos con proyectos.
+>Por eso, antes de eliminar un proyecto debemos revisar si existen registros relacionados que dependan de ese proyecto. Si existen, SQL Server puede impedir el DELETE para proteger la integridad referencial.**
 
 ---
 
@@ -664,19 +676,19 @@ Documenta:
 
 ```text
 Nombre del proyecto:
-[ ]
+Proyecto CRUD DataLab
 
 Descripción:
-[ ]
+Proyecto creado para practicar las operaciones CRUD en la base de datos DataLab.
 
 ¿Por qué se crea?
-[ ]
+Se crea para practicar la inserción, consulta, actualización y eliminación de registros.
 
 ¿Quién es responsable?
-[ ]
+El equipo de trabajo de DataLab.
 
 ¿Qué otros datos necesitará posteriormente?
-[ ]
+Podrá relacionarse posteriormente con experimentos y otros registros mediante las claves foráneas del modelo.
 ```
 
 ---
@@ -798,16 +810,16 @@ Documenta:
 
 ```text
 ¿Qué ocurrió?
-[ ]
+SQL Server rechazó la operación porque el id_proyecto 9999 no existe en la tabla proyecto.
 
 ¿Por qué ocurrió?
-[ ]
+Porque el experimento necesita estar relacionado con un proyecto existente.
 
 ¿Qué restricción intervino?
-[ ]
+Intervino la restricción de clave foránea de experimento que referencia a proyecto.
 
 ¿Qué relación del modelo está protegiendo SQL Server?
-[ ]
+Está protegiendo la relación entre proyecto y experimento, evitando que se registre un experimento asociado a un proyecto inexistente.
 ```
 
 Conecta:
@@ -1044,14 +1056,46 @@ Debe poder observarse **el proceso**.
 Explica con tus propias palabras:
 
 1. ¿Qué hace `SELECT`?
+
+SELECT sirve para consultar y mostrar información almacenada en las tablas.
+
 2. ¿Qué hace `INSERT`?
+
+INSERT sirve para crear nuevos registros en una tabla.
+
 3. ¿Qué hace `UPDATE`?
+
+UPDATE permite modificar información de registros existentes.
+
 4. ¿Qué hace `DELETE`?
+
+DELETE permite eliminar registros de una tabla.
+
 5. ¿Por qué `UPDATE` necesita normalmente `WHERE`?
+
+Porque WHERE permite indicar qué registro o registros se deben modificar. Sin WHERE, se podrían modificar todos los registros.
+
 6. ¿Por qué `DELETE` puede verse afectado por las claves foráneas?
+
+Porque un registro puede tener otros registros relacionados. SQL Server puede impedir la eliminación para proteger la integridad referencial.
+
 7. ¿Por qué debemos consultar antes de modificar?
+
+Porque así podemos verificar que la condición selecciona exactamente el registro que queremos modificar o eliminar.
+
 8. ¿Cómo se relacionan `INSERT`, `SELECT`, `UPDATE` y `DELETE` con CRUD?
+
+INSERT → Create 
+
+SELECT → Read 
+
+UPDATE → Update 
+
+DELETE → Delete
+
 9. ¿Qué ocurriría si intentas crear un experimento utilizando un `id_proyecto` inexistente?
+
+SQL Server rechazaría el INSERT porque la clave foránea exige que ese proyecto exista.
 
 ---
 
