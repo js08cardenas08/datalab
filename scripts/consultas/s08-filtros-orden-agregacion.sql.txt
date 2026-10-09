@@ -1,0 +1,40 @@
+prueba
+1. Buscar un proyecto por su nombre.
+
+SELECT *
+FROM proyecto
+WHERE nombre = 'Detección de fraude en transacciones';
+2. Buscar métricas mayores a `0.80`.
+
+SELECT *
+FROM metrica
+WHERE valor > 0.80;
+3. Buscar métricas menores o iguales a `0.50`.
+
+SELECT *
+FROM metrica
+WHERE valor <= 0.50;
+4. Buscar métricas entre `0.70` y `0.90`.
+
+SELECT *
+FROM metrica
+WHERE valor BETWEEN 0.70 AND 0.90;
+5. Buscar experimentos cuyo estado esté dentro de una lista de estados.
+
+SELECT *
+FROM experimento
+WHERE estado IN ('exitoso', 'fallido');
+6. Buscar datasets cuyo nombre comience por una palabra determinada.
+
+SELECT *
+FROM dataset
+WHERE nombre LIKE 'EEG%';
+7. Buscar datasets sin notas.
+
+SELECT *
+FROM dataset
+WHERE notas IS NULL;
+8. Buscar datasets que sí tengan notas.
+
+SELECT *
+FROM dataset

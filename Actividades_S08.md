@@ -63,14 +63,20 @@ Completa la siguiente tabla:
 
 | Comando | ¿Qué hace? | Tabla DataLab donde lo aplicarías |
 |---|---|---|
-| `INSERT` | | |
-| `SELECT` | | |
-| `UPDATE` | | |
-| `DELETE` | | |
+| `INSERT` |Inserta nuevos registros en una tabla. |Proyecto |
+| `SELECT` | Consulta y muestra informacion almacenada en la tabla |Dataset |
+| `UPDATE` |Modifica los datos de registros existentes. |  experimento|
+| `DELETE` |  Elimina registros de una tabla.| Poyecto |
 
 ### Pregunta Feynman
 
 Explica con tus propias palabras la diferencia entre `UPDATE` y `ALTER TABLE`.
+
+UPDATE se utiliza para modificar los valores de los registros que ya existen en una tabla. Por ejemplo, cambiar el estado de un experimento de pendiente a exitoso.
+
+En cambio, ALTER TABLE se utiliza para modificar la estructura de una tabla, por ejemplo, agregar una columna, cambiar el tipo de dato o eliminar una columna.
+
+En conclusión, UPDATE modifica los datos, mientras que ALTER TABLE modifica la estructura de la tabla.
 
 ---
 
@@ -86,9 +92,13 @@ SET estado = 'fallido';
 Responde:
 
 1. ¿Es una instrucción válida?
+Sí, es una instrucción SQL válida.
 2. ¿Qué filas modifica?
+Modifica todas las filas de la tabla experimento, estableciendo el valor de la columna estado como 'fallido'.
 3. ¿Por qué puede ser peligrosa?
+Porque, al no tener una cláusula WHERE, no distingue entre los experimentos. Todos quedan con el estado 'fallido', incluso aquellos que antes estaban exitosos o pendientes.
 4. ¿Cómo comprobarías primero qué filas serán afectadas?
+Ejecutando primero un SELECT para visualizar todos los registros:
 
 Ahora analiza:
 
@@ -98,6 +108,13 @@ DELETE FROM experimento;
 
 Explica qué diferencia existe entre eliminar las filas y eliminar la tabla.
 
+
+La instrucción DELETE FROM experimento; elimina todos los registros de la tabla experimento, pero conserva la estructura de la tabla, sus columnas y sus restricciones.
+
+En cambio, DROP TABLE experimento; elimina la tabla completa, incluyendo su estructura y los datos almacenados.
+
+Por eso, DELETE sin WHERE puede causar pérdida de información, mientras que DROP TABLE elimina también la estructura de la tabla.
+
 ---
 
 # Actividad 3 — Operadores
@@ -106,17 +123,17 @@ Completa con un ejemplo de DataLab:
 
 | Operador | Ejemplo | ¿Qué busca? |
 |---|---|---|
-| `=` | | |
-| `<>` | | |
-| `>` | | |
-| `<` | | |
-| `>=` | | |
-| `<=` | | |
-| `BETWEEN` | | |
-| `IN` | | |
-| `LIKE` | | |
-| `IS NULL` | | |
-| `IS NOT NULL` | | |
+| `=` | SELECT * FROM experimento WHERE estado = 'exitoso';| Experimentos cuyo estado sea exitoso.|
+| `<>` | SELECT * FROM experimento WHERE estado <> 'fallido';| Experimentos cuyo estado sea diferente de fallido.|
+| `>` |SELECT * FROM metrica WHERE valor > 0.80; | Métricas con valor superior a 0.80. |
+| `<` | SELECT * FROM metrica WHERE valor < 0.50;|Métricas con valor inferior a 0.50. |
+| `>=` | SELECT * FROM metrica WHERE valor >= 0.80;| Métricas con valor mayor o igual a 0.80.|
+| `<=` | SELECT * FROM metrica WHERE valor <= 0.50;| Métricas con valor menor o igual a 0.50.|
+| `BETWEEN` |SELECT * FROM metrica WHERE valor BETWEEN 0.70 AND 0.90; | Métricas con valores entre 0.70 y 0.90, incluidos los extremos.|
+| `IN` |SELECT * FROM experimento WHERE estado IN ('exitoso', 'fallido'); | Experimentos cuyo estado coincida con alguno de los valores indicados.|
+| `LIKE` |SELECT * FROM dataset WHERE nombre LIKE 'EEG%'; | Datasets cuyos nombres comiencen por EEG. |
+| `IS NULL` |SELECT * FROM dataset WHERE notas IS NULL; |Datasets que no tienen valor en el campo notas. |
+| `IS NOT NULL` |SELECT * FROM dataset WHERE notas IS NOT NULL; | Datasets que sí tienen un valor en el campo notas. |
 
 ---
 
@@ -132,6 +149,9 @@ WHERE notas = NULL;
 
 Escribe la consulta correcta.
 
+
+La consulta WHERE notas = NULL no es correcta porque NULL representa un valor ausente o desconocido y no se puede comparar utilizando el operador de igualdad. Para buscar registros que no tengan información en el campo notas, se debe utilizar IS NULL. Si queremos buscar registros que sí tengan información, utilizamos IS NOT NULL.
+
 ---
 
 # Actividad 5 — AND, OR y NOT
@@ -141,19 +161,44 @@ Construye consultas que permitan:
 ### a)
 Obtener experimentos exitosos.
 
+SELECT *
+FROM experimento
+WHERE estado = 'exitoso';
+
 ### b)
 Obtener experimentos exitosos o fallidos.
+
+SELECT *
+FROM experimento
+WHERE estado = 'exitoso'
+   OR estado = 'fallido';
 
 ### c)
 Obtener métricas cuyo valor esté entre 0.70 y 0.90.
 
+SELECT *
+FROM metrica
+WHERE valor >= 0.70
+  AND valor <= 0.90;
+
 ### d)
 Obtener experimentos cuyo estado no sea `fallido`.
+
+SELECT *
+FROM experimento
+WHERE NOT estado = 'fallido';
 
 ### e)
 Crear una consulta que combine `AND` y `OR` utilizando paréntesis.
 
+SELECT *
+FROM experimento
+WHERE (estado = 'exitoso' OR estado = 'fallido')
+  AND id_proyecto = 1;
+
 Explica por qué utilizaste los paréntesis.
+
+Los paréntesis permiten agrupar las condiciones que deben evaluarse juntas. En este caso, primero se consideran los experimentos exitosos o fallidos y después se filtran aquellos que pertenecen al proyecto con identificador 1. Esto permite controlar la lógica de la consulta y evitar resultados no deseados.
 
 ---
 
@@ -164,13 +209,45 @@ Explica por qué utilizaste los paréntesis.
 Crea una consulta para cada caso:
 
 1. Buscar un proyecto por su nombre.
+
+SELECT *
+FROM proyecto
+WHERE nombre = 'Detección de fraude en transacciones';
 2. Buscar métricas mayores a `0.80`.
+
+SELECT *
+FROM metrica
+WHERE valor > 0.80;
 3. Buscar métricas menores o iguales a `0.50`.
+
+SELECT *
+FROM metrica
+WHERE valor <= 0.50;
 4. Buscar métricas entre `0.70` y `0.90`.
+
+SELECT *
+FROM metrica
+WHERE valor BETWEEN 0.70 AND 0.90;
 5. Buscar experimentos cuyo estado esté dentro de una lista de estados.
+
+SELECT *
+FROM experimento
+WHERE estado IN ('exitoso', 'fallido');
 6. Buscar datasets cuyo nombre comience por una palabra determinada.
+
+SELECT *
+FROM dataset
+WHERE nombre LIKE 'EEG%';
 7. Buscar datasets sin notas.
+
+SELECT *
+FROM dataset
+WHERE notas IS NULL;
 8. Buscar datasets que sí tengan notas.
+
+SELECT *
+FROM dataset
+WHERE notas IS NOT NULL;
 
 Guarda todas las consultas en:
 
