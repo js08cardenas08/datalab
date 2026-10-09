@@ -147,9 +147,7 @@ CREATE TABLE para resolver estos cambios?
 
 Respuesta:
 
-____________________________________________________
-
-____________________________________________________
+Porque las tablas de DataLab ya existen y tienen información guardada. Si las volvemos a crear, podemos generar errores o perder información. Para agregar nuevas columnas o cambiar la estructura de las tablas que ya existen, utilizamos ALTER TABLE.
 ```
 
 ---
@@ -215,9 +213,7 @@ responde:
 ```text
 ¿Qué ocurrirá si experimento ya tiene registros?
 
-____________________________________________________
-
-____________________________________________________
+SQL Server puede rechazar la operación porque los registros que ya existen necesitan un valor para la nueva columna y no pueden recibir NULL. Para solucionarlo, podemos definir un DEFAULT que asigne un valor válido a esos registros.
 ```
 
 La idea que debes identificar es:
@@ -244,7 +240,10 @@ Escribe primero el comando en papel.
 
 ```sql
 ALTER TABLE experimento
-ADD ________________________________________________;
+ADD estado VARCHAR(20) NOT NULL
+    CONSTRAINT df_experimento_estado
+    DEFAULT 'planificado'
+    WITH VALUES;;
 ```
 
 Después explica:
@@ -252,7 +251,7 @@ Después explica:
 ```text
 ¿Qué valor recibirán los registros existentes?
 
-____________________________________________________
+Utilizando DEFAULT 'planificado' al agregar la columna. Los registros existentes recibirán el valor 'planificado' mediante WITH VALUES.
 ```
 
 ---
@@ -269,9 +268,16 @@ fallido
 ```
 
 ```sql
-ALTER TABLE experimento
-ADD CONSTRAINT ______________________________________
-CHECK _______________________________________________;
+ALTER TABLE dbo.experimento
+ADD CONSTRAINT chk_experimento_estado
+CHECK (
+    estado IN (
+        'planificado',
+        'en_ejecucion',
+        'exitoso',
+        'fallido'
+    )
+);
 ```
 
 ---
@@ -291,17 +297,17 @@ Nombre:
 notas
 
 Tipo:
-________________________________
+VARCHAR(MAX).
 
 ¿Puede ser NULL?
-________________________________
+Sí, porque un dataset puede no tener observaciones registradas.
 ```
 
 Escribe el `ALTER TABLE`:
 
 ```sql
-ALTER TABLE dataset
-ADD ________________________________________________;
+ALTER TABLE dbo.dataset
+ADD notas VARCHAR(MAX) NULL;
 ```
 
 ---
@@ -323,7 +329,7 @@ Antes de ejecutarlo, explica:
 ```text
 ¿Por qué se utiliza WHERE?
 
-____________________________________________________
+Porque WHERE permite indicar qué registro queremos modificar. En este caso, actualizamos el estado del experimento cuyo identificador es 1, sin cambiar el estado de todos los experimentos.
 ```
 
 ---
@@ -336,9 +342,7 @@ Explica:
 ¿Por qué este cambio puede considerarse
 una migración de esquema?
 
-____________________________________________________
-
-____________________________________________________
+Porque estamos modificando la estructura de una base de datos que ya existe para adaptarla a nuevas necesidades. Los cambios se guardan en un script y se registran en Git, lo que permite identificar cómo ha evolucionado la base de datos.
 ```
 
 La idea central es que el script de modificación representa una evolución incremental y trazable del diseño. fileciteturn14file0L76-L80
@@ -437,11 +441,11 @@ Documenta:
 ```text
 ¿Qué ocurrió?
 
-____________________________________________________
+SQL Server rechazó la actualización porque se intentó asignar el estado terminado al experimento con identificador 1. La operación no se realizó porque ese valor no está permitido por la restricción CHECK.
 
 ¿Por qué SQL Server rechazó o aceptó la operación?
 
-____________________________________________________
+SQL Server rechazó la operación porque la restricción chk_experimento_estado solo permite los estados planificado, en_ejecucion, exitoso y fallido. Como terminado no está dentro de esos valores, la base de datos impide guardar ese cambio y mantiene el estado anterior del experimento.
 ```
 
 La prueba permite comprobar que la restricción realmente está funcionando.
@@ -518,11 +522,12 @@ Documenta:
 ```text
 Restricción agregada:
 
-____________________________________________________
+Se agrega una restricción UNIQUE a la columna nombre de la tabla proyecto, con el nombre uq_proyecto_nombre.
 
 ¿Por qué es necesaria?
 
-____________________________________________________
+La restricción es necesaria para evitar que se registren dos proyectos con el mismo nombre. De esta manera, se mantiene la información más organizada y se evitan confusiones al consultar los proyectos de DataLab.
+Ojo, bro: esta restricción solo debe agregarse si en el modelo de DataLab el nombre de cada proyecto debe ser único. Si pueden existir proyectos diferentes con el mismo nombre, no sería correcto imponerla.
 ```
 
 ---
@@ -543,15 +548,15 @@ Antes de ejecutar:
 ```text
 ¿Qué tamaño tenía?
 
-________________________
+La columna descripcion tenía un tamaño de 50 caracteres.
 
 ¿Qué tamaño tendrá?
 
-________________________
+Después de ejecutar ALTER COLUMN, tendrá un tamaño máximo de 200 caracteres.
 
 ¿Por qué se amplía?
 
-________________________
+Se amplía para permitir almacenar textos más largos sin tener que crear otra columna. De esta manera, se puede adaptar la estructura de la base de datos a nuevas necesidades.
 ```
 
 ---
@@ -676,15 +681,15 @@ Analiza:
 ```text
 ¿Existen duplicados?
 
-________________________
+Se debe revisar el resultado de la consulta. Si aparecen registros, existen nombres repetidos. Si no aparecen registros, la consulta no encontró duplicados.
 
 ¿Se puede agregar UNIQUE inmediatamente?
 
-________________________
+Solo si los datos cumplen la regla de unicidad y el modelo del proyecto establece que no puede haber dos proyectos con el mismo nombre.
 
 ¿Qué habría que hacer primero?
 
-________________________
+Consultar los registros duplicados, revisar por qué se repiten y corregirlos si corresponde. Después se puede agregar la restricción, siempre que esa regla sea válida para DataLab.
 ```
 
 ---
@@ -720,6 +725,13 @@ El procedimiento correcto sería:
 
 Documenta un ejemplo.
 
+```sql
+UPDATE experimento
+SET estado = 'exitoso'
+WHERE id_experimento = 1;
+
+```
+
 ---
 
 # 27. Reto — Diferenciar DML y DDL
@@ -740,13 +752,15 @@ Completa:
 
 ```text
 DML:
-____________________________________________
+INSERT, UPDATE, DELETE y SELECT.
 
 DDL:
-____________________________________________
+ALTER TABLE, DROP TABLE y CREATE TABLE.
 ```
 
 Explica la diferencia con tus propias palabras.
+
+DML se utiliza para consultar y manipular los datos que están almacenados en las tablas. DDL se utiliza para crear, modificar o eliminar estructuras de la base de datos, como tablas y columnas.
 
 ---
 
@@ -770,6 +784,41 @@ dataset
 
 También documenta las restricciones nuevas.
 
+
+```
+Evolución del esquema — Semana 7
+
+Tabla: experimento
+
+Columna nueva: estado
+
+Tipo de dato: VARCHAR(20)
+
+Permite valores nulos: No.
+
+Valor por defecto: planificado.
+
+Restricción: CHECK para permitir únicamente planificado, en_ejecucion, exitoso y fallido.
+
+La columna permite identificar el estado actual de cada experimento.
+
+Tabla: dataset
+
+Columna nueva: notas
+
+Tipo de dato: VARCHAR(MAX)
+
+Permite valores nulos: Sí.
+
+La columna permite guardar observaciones adicionales relacionadas con cada dataset.
+
+Restricciones
+
+Se agregó una restricción DEFAULT para asignar el estado inicial de los experimentos y una restricción CHECK para controlar los valores permitidos.
+
+La restricción UNIQUE sobre el nombre del proyecto solo se documentará como implementada si se verificó que corresponde al modelo y se agregó correctamente.
+```
+
 ---
 
 # 29. Registrar decisiones
@@ -783,26 +832,23 @@ documentacion/decisiones.md
 Incluye:
 
 ```text
-Fecha:
-[ ]
+Semana 7 — Evolución del esquema de DataLab
 
-Cambio realizado:
-[ ]
+Fecha: [09/10/2026].
 
-Motivo:
-[ ]
+Cambio realizado: Se agregó la columna estado a la tabla experimento y la columna notas a la tabla dataset.
 
-Problema encontrado:
-[ ]
+Motivo: Permitir el seguimiento del estado de los experimentos y registrar observaciones adicionales sobre los datasets.
 
-Solución:
-[ ]
+Problema encontrado: Las restricciones de integridad pueden rechazar operaciones cuando los valores ingresados no cumplen las reglas definidas.
 
-Restricciones afectadas:
-[ ]
+Solución: Se revisaron los valores permitidos, se realizaron pruebas con estados válidos e inválidos y se verificaron los resultados mediante consultas SQL.
 
-Impacto sobre datos existentes:
-[ ]
+Restricciones afectadas: DEFAULT y CHECK para el estado de los experimentos. La restricción UNIQUE se documentará si se implementó y se verificó correctamente.
+
+Impacto sobre datos existentes: La columna estado se configura con el valor predeterminado planificado para los registros existentes al agregarla con WITH VALUES. La columna notas permite valores nulos, por lo que no requiere completar inmediatamente todas las observaciones.
+
+Pruebas realizadas: Se verificaron las columnas agregadas, los estados de los experimentos y el funcionamiento de las restricciones. También se practicaron modificaciones y eliminaciones sobre tablas desechables.
 ```
 
 La guía docente solicita registrar específicamente qué ocurrió al aplicar restricciones sobre datos existentes y qué ajustes fueron necesarios. fileciteturn14file0L138-L145
@@ -855,29 +901,82 @@ scripts/
     DROP de prueba
 */
 
+USE datalab;
+GO
+
 -- ==========================================
 -- 1. AGREGAR ESTADO
 -- ==========================================
+
+ALTER TABLE experimento
+ADD estado VARCHAR(20) NOT NULL
+    CONSTRAINT df_experimento_estado
+    DEFAULT 'planificado'
+    WITH VALUES;
+GO
 
 
 -- ==========================================
 -- 2. AGREGAR CHECK
 -- ==========================================
 
+ALTER TABLE experimento
+ADD CONSTRAINT chk_experimento_estado
+CHECK (
+    estado IN (
+        'planificado',
+        'en_ejecucion',
+        'exitoso',
+        'fallido'
+    )
+);
+GO
+
 
 -- ==========================================
 -- 3. AGREGAR NOTAS
 -- ==========================================
+
+ALTER TABLE dataset
+ADD notas VARCHAR(MAX) NULL;
+GO
 
 
 -- ==========================================
 -- 4. ACTUALIZAR ESTADOS
 -- ==========================================
 
+-- Consultar primero el registro que se va a modificar.
+SELECT id_experimento, estado
+FROM experimento
+WHERE id_experimento = 1;
+GO
+
+-- Ejecutar solo si el experimento con ID 1 existe
+-- y corresponde actualizarlo a exitoso.
+UPDATE experimento
+SET estado = 'exitoso'
+WHERE id_experimento = 1;
+GO
+
+-- Verificar el resultado.
+SELECT id_experimento, estado
+FROM experimento
+WHERE id_experimento = 1;
+GO
+
 
 -- ==========================================
 -- 5. RESTRICCIÓN ADICIONAL
 -- ==========================================
+
+-- Consultar si hay nombres de proyectos duplicados.
+SELECT nombre, COUNT(*) AS cantidad
+FROM proyecto
+GROUP BY nombre
+HAVING COUNT(*) > 1;
+GO
+
 
 
 -- ==========================================
@@ -885,9 +984,39 @@ scripts/
 -- ==========================================
 
 
+
+
 -- ==========================================
 -- 7. PRUEBA DROP
 -- ==========================================
+
+-- Crear una tabla exclusivamente para practicar.
+CREATE TABLE tabla_prueba_drop (
+    id INT PRIMARY KEY,
+    dato VARCHAR(50)
+);
+GO
+
+INSERT INTO tabla_prueba_drop (id, dato)
+VALUES (1, 'prueba');
+GO
+
+SELECT *
+FROM tabla_prueba_drop;
+GO
+
+-- Eliminar únicamente la columna de prueba.
+ALTER TABLE tabla_prueba_drop
+DROP COLUMN dato;
+GO
+
+SELECT *
+FROM tabla_prueba_drop;
+GO
+
+-- Eliminar la tabla desechable.
+DROP TABLE tabla_prueba_drop;
+GO
 ```
 
 ---
@@ -948,17 +1077,25 @@ Explica a un compañero, sin leer el código:
 
 ¿Por qué utilizamos `ALTER TABLE` y no `CREATE TABLE` nuevamente?
 
+Porque la tabla ya existe y necesitamos modificar su estructura sin volver a crearla desde cero.
+
 ### Reto 2
 
 ¿Por qué agregar `NOT NULL` sobre una tabla que ya tiene datos puede generar un problema?
+
+Porque los registros existentes necesitan tener un valor para esa columna. Si no se proporciona un valor válido, SQL Server puede rechazar la modificación.
 
 ### Reto 3
 
 ¿Por qué necesitamos `DEFAULT`?
 
+Porque permite asignar automáticamente un valor cuando no se especifica uno al insertar un registro. En DataLab se utiliza planificado como estado inicial.
+
 ### Reto 4
 
 ¿Qué problema puede aparecer al agregar un `CHECK` sobre datos existentes?
+
+Que algunos registros contengan valores que no cumplen la condición. En ese caso, es necesario revisar y corregir los datos antes de agregar la restricción.
 
 ### Reto 5
 
@@ -971,13 +1108,31 @@ DROP TABLE
 DROP DATABASE
 ```
 
+DELETE: elimina registros de una tabla.
+
+
+
+DROP COLUMN: elimina una columna de una tabla.
+
+
+
+DROP TABLE: elimina una tabla completa.
+
+
+
+DROP DATABASE: elimina una base de datos completa.
+
 ### Reto 6
 
 ¿Por qué `ALTER TABLE` puede considerarse una migración de esquema?
 
+Porque modifica de forma controlada la estructura de una base de datos existente para adaptarla a nuevos requisitos.
+
 ### Reto 7
 
 ¿Por qué debemos probar `DROP` únicamente sobre una tabla desechable?
+
+Porque estas instrucciones pueden eliminar estructuras y datos de manera permanente. Una tabla de prueba permite aprender sin poner en riesgo la información real.
 
 ---
 
