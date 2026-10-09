@@ -282,6 +282,36 @@ Utilizando `dataset.nombre`, crea consultas para:
 
 Documenta el resultado obtenido.
 
+sql
+-- ============================================
+-- Actividad 8: LIKE sobre dataset.nombre
+-- ============================================
+
+-- 1. Nombres que comienzan por 'Trans'
+SELECT * FROM dataset
+WHERE nombre LIKE 'Trans%';
+-- Resultado: 3 filas (ids 1, 3, 5), todas "Transacciones 2025"
+
+-- 2. Nombres que terminan en 'activos'
+SELECT * FROM dataset
+WHERE nombre LIKE '%activos';
+-- Resultado: 3 filas (ids 2, 4, 6), todas "Clientes activos"
+
+-- 3. Nombres que contienen 'cion'
+SELECT * FROM dataset
+WHERE nombre LIKE '%cion%';
+-- Resultado: 3 filas (ids 1, 3, 5), "Transacciones 2025"
+
+-- 4. Patrón de longitud con _ (el _ reemplaza exactamente 1 carácter, aquí el espacio)
+SELECT * FROM dataset
+WHERE nombre LIKE 'Clientes_activos';
+-- Resultado: 3 filas (ids 2, 4, 6), "Clientes activos"
+
+-- Interpretación:
+-- % representa cero o más caracteres; _ representa exactamente uno.
+-- Cada consulta devuelve 3 filas porque la tabla dataset contiene
+-- 3 copias de cada dataset (6 filas en total, ids 1-6 duplicados).
+
 ---
 
 # BLOQUE 3 — Ordenamiento
@@ -315,10 +345,10 @@ Si dos datasets tienen la misma fuente, ¿qué criterio decide cuál aparece pri
 
 Responde mediante SQL:
 
-1. ¿Cuántos datasets existen?
-2. ¿Cuántos experimentos existen?
-3. ¿Cuántos modelos existen?
-4. ¿Cuántas métricas existen?
+1. ¿Cuántos datasets existen? 6
+2. ¿Cuántos experimentos existen? 6
+3. ¿Cuántos modelos existen? 6
+4. ¿Cuántas métricas existen? 6
 
 ---
 
@@ -385,7 +415,7 @@ No utilices:
 WHERE AVG(valor) > 0.8
 ```
 
-Explica por qué.
+Explica por qué. WHERE filtra filas individuales antes de agrupar. El promedio solo existe después de agrupar, así que en ese momento AVG todavía no se puede calcular y SQL da error. Para filtrar sobre resultados agregados se usa HAVING:
 
 ---
 
@@ -465,7 +495,9 @@ WHERE nombre = 'FILA_DE_PRUEBA_BORRAR';
 
 ### Pregunta
 
-¿Por qué es importante que el registro de prueba sea claramente identificable?
+¿Por qué es importante que el registro de prueba sea claramente identificable? 
+
+Porque el DELETE borra todo lo que cumpla el WHERE. Con un nombre único como 'FILA_DE_PRUEBA_BORRAR' te aseguras de eliminar solo ese registro y nunca datos reales. Además, si te equivocas, es evidente qué se borró.
 
 ---
 
@@ -651,6 +683,8 @@ Explica a un compañero:
 
 La explicación debe ser suficientemente clara para que la otra persona pueda comprenderla sin mirar una consulta SQL.
 
+Imagina que tienes cajas con fichas de colores. WHERE es revisar ficha por ficha y descartar las que no sirven antes de ordenarlas en cajas. HAVING es mirar cada caja ya armada y quedarte solo con las cajas que cumplen algo, por ejemplo “las que tienen más de 5 fichas”. Uno filtra filas, el otro filtra grupos.
+
 ---
 
 ## Actividad 20 — Explícalo con un ejemplo
@@ -667,6 +701,10 @@ Después explica la solución:
 
 ```sql
 WHERE notas IS NULL
+
+NULL significa “valor desconocido o ausente”, no es un valor concreto. Comparar algo con NULL mediante = da un resultado desconocido (ni verdadero ni falso), y WHERE solo deja pasar las filas verdaderas, así que nunca devuelve nada. La forma correcta es IS NULL (y IS NOT NULL para lo contrario), que sí pregunta “¿este campo está vacío?”.
+
+En tu base no existe dataset.notas, así que para practicar esto necesitas confirmar con el profesor si agregas la columna o usas otra que admita nulos.
 ```
 
 ---
@@ -700,8 +738,14 @@ SELECT *
 FROM dataset
 ORDER BY fecha_carga DESC
 LIMIT 5;
+
+
+
 ```
 
+Idéntico: SELECT, FROM, ORDER BY fecha_carga DESC.
+Cambia: cómo se limita el número de filas. SQL Server usa SELECT TOP 5 *, al inicio. MySQL usa LIMIT 5, al final.
+Por qué: cada motor implementó su propio dialecto para algo que el estándar SQL antiguo no definía. Sus sintaxis difieren, aunque el resultado es el mismo.
 ---
 
 # BLOQUE 10 — Entregable
