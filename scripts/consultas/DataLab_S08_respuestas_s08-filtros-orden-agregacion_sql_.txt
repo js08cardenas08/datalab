@@ -1,0 +1,311 @@
+DataLab - Semana 8 | Plantilla de respuestas
+Estudiante: s08-filtros-orden-agregacion.sql.
+
+EJERCICIO 1
+Consulta / respuesta:
+SELECT id_proyecto, nombre_proyecto
+FROM dbo.proyecto;
+Observaciones:
+La consulta muestra el identificador y el nombre de todos los proyectos registrados.
+
+----------------------------------------
+
+EJERCICIO 2
+Consulta / respuesta:
+SELECT id_dataset, nombre, fuente
+FROM dbo.dataset
+WHERE fuente = N'externa';
+Observaciones:
+Devuelve únicamente los datasets cuya fuente está registrada como externa.
+
+----------------------------------------
+
+EJERCICIO 3
+Consulta / respuesta:
+SELECT id_metrica, nombre_metrica, valor
+FROM dbo.metrica
+WHERE valor >= 0.80;
+Observaciones:
+Muestra las métricas con valor igual o superior a 0.80, incluyendo exactamente 0.80.
+
+----------------------------------------
+
+EJERCICIO 4
+Consulta / respuesta:
+SELECT id_metrica, nombre_metrica, valor
+FROM dbo.metrica
+WHERE valor BETWEEN 0.70 AND 0.90;
+Observaciones:
+BETWEEN incluye los dos extremos: 0.70 y 0.90.
+
+----------------------------------------
+
+EJERCICIO 5
+Consulta / respuesta:
+SELECT id_dataset, nombre, fuente
+FROM dbo.dataset
+WHERE fuente IN (N'interna', N'externa');
+Observaciones:
+IN permite consultar las filas cuya fuente sea interna o externa. Solo aparecerán registros que coincidan con alguno de esos valores.
+
+----------------------------------------
+
+EJERCICIO 6
+Consulta / respuesta:
+SELECT id_dataset, nombre
+FROM dbo.dataset
+WHERE nombre LIKE N'EEG%';
+Observaciones:
+El símbolo % representa cualquier secuencia de caracteres después de EEG. Por eso, encuentra nombres que comienzan por EEG.
+
+----------------------------------------
+
+EJERCICIO 7
+Consulta / respuesta:
+-- Datasets cuyo tamaño es desconocido
+SELECT id_dataset, nombre, tamanio_filas
+FROM dbo.dataset
+WHERE tamanio_filas IS NULL;
+
+-- Datasets cuyo tamaño sí está informado
+SELECT id_dataset, nombre, tamanio_filas
+FROM dbo.dataset
+WHERE tamanio_filas IS NOT NULL;
+Observaciones:
+IS NULL encuentra valores ausentes; IS NOT NULL encuentra los valores informados. NULL no se debe comparar con = NULL.
+
+----------------------------------------
+
+EJERCICIO 8
+Consulta / respuesta:
+SELECT id_dataset, nombre, fuente, fecha_carga
+FROM dbo.dataset
+WHERE fuente = N'externa'
+  AND fecha_carga >= '2026-01-01';
+Observaciones:
+AND exige que se cumplan las dos condiciones: fuente externa y fecha de carga desde el 1 de enero de 2026, inclusive.
+
+----------------------------------------
+
+EJERCICIO 9
+Consulta / respuesta:
+-- Forma 1
+SELECT id_dataset, nombre, fuente
+FROM dbo.dataset
+WHERE fuente <> N'externa';
+
+-- Forma 2
+SELECT id_dataset, nombre, fuente
+FROM dbo.dataset
+WHERE NOT (fuente = N'externa');
+Observaciones:
+Para valores no nulos, ambas formas devuelven las fuentes distintas de externa. En SQL Server, ambas también excluyen las filas donde fuente es NULL, porque la comparación con NULL no resulta verdadera.
+
+----------------------------------------
+
+EJERCICIO 10
+Consulta / respuesta:
+SELECT nombre, fecha_carga
+FROM dbo.dataset
+ORDER BY fecha_carga DESC;
+Observaciones:
+DESC ordena desde la fecha más reciente hasta la más antigua. Las fechas NULL, si existen, se ordenan según las reglas de SQL Server.
+
+----------------------------------------
+
+EJERCICIO 11
+Consulta / respuesta:
+SELECT nombre, fuente, fecha_carga
+FROM dbo.dataset
+ORDER BY fuente ASC, fecha_carga DESC;
+Observaciones:
+Primero agrupa visualmente por fuente en orden ascendente y, dentro de cada fuente, muestra las fechas de más reciente a más antigua.
+
+----------------------------------------
+
+EJERCICIO 12
+Consulta / respuesta:
+SELECT COUNT(*) AS cantidad_datasets
+FROM dbo.dataset;
+Observaciones:
+COUNT(*) devuelve la cantidad total de filas de la tabla dataset. El número exacto depende de los datos cargados.
+
+----------------------------------------
+
+EJERCICIO 13
+Consulta / respuesta:
+SELECT AVG(valor) AS promedio,
+       MIN(valor) AS minimo,
+       MAX(valor) AS maximo
+FROM dbo.metrica;
+Observaciones:
+La consulta resume los valores de las métricas con promedio, mínimo y máximo. Los resultados exactos dependen de los datos existentes.
+
+----------------------------------------
+
+EJERCICIO 14
+Consulta / respuesta:
+SELECT fuente, COUNT(*) AS cantidad_datasets
+FROM dbo.dataset
+GROUP BY fuente;
+Observaciones:
+GROUP BY crea un grupo por cada fuente y COUNT(*) cuenta cuántos datasets pertenecen a cada una.
+
+----------------------------------------
+
+EJERCICIO 15
+Consulta / respuesta:
+SELECT nombre_metrica, AVG(valor) AS promedio
+FROM dbo.metrica
+GROUP BY nombre_metrica;
+Observaciones:
+Calcula el promedio de valor por cada tipo de métrica. Cada fila del resultado corresponde a un nombre_metrica.
+
+----------------------------------------
+
+EJERCICIO 16
+Consulta / respuesta:
+SELECT nombre_metrica, AVG(valor) AS promedio
+FROM dbo.metrica
+GROUP BY nombre_metrica
+HAVING AVG(valor) > 0.80;
+Observaciones:
+HAVING filtra los grupos después de calcular el promedio. AVG(valor) no debe ir en WHERE porque WHERE filtra filas antes de agrupar.
+
+----------------------------------------
+
+EJERCICIO 17
+Consulta / respuesta:
+INSERT INTO dbo.proyecto (nombre_proyecto, descripcion)
+VALUES (N'Proyecto S08 - Prueba estudiante',
+        N'Registro temporal creado para el ejercicio 17 de Semana 8.');
+
+SELECT id_proyecto, nombre_proyecto, descripcion
+FROM dbo.proyecto
+WHERE nombre_proyecto = N'Proyecto S08 - Prueba estudiante';
+Observaciones:
+INSERT crea el proyecto y SQL Server genera id_proyecto automáticamente si es una columna IDENTITY. El SELECT permite verificar el registro. Si el nombre ya existe, usa otro nombre único.
+
+----------------------------------------
+
+EJERCICIO 18
+Consulta / respuesta:
+-- Verificar antes de modificar
+SELECT id_proyecto, nombre_proyecto, descripcion
+FROM dbo.proyecto
+WHERE nombre_proyecto = N'Proyecto S08 - Prueba estudiante';
+
+-- Actualizar la descripción
+UPDATE dbo.proyecto
+SET descripcion = N'Descripcion actualizada para el ejercicio 18 de Semana 8.'
+WHERE nombre_proyecto = N'Proyecto S08 - Prueba estudiante';
+
+-- Verificar después de modificar
+SELECT id_proyecto, nombre_proyecto, descripcion
+FROM dbo.proyecto
+WHERE nombre_proyecto = N'Proyecto S08 - Prueba estudiante';
+Observaciones:
+Se consulta primero el proyecto, se modifica solo la descripción de ese nombre y se vuelve a consultar para comprobar el cambio. El WHERE evita actualizar otros proyectos.
+
+----------------------------------------
+
+EJERCICIO 19
+Consulta / respuesta:
+-- Verificar que sea el proyecto de prueba
+SELECT id_proyecto, nombre_proyecto
+FROM dbo.proyecto
+WHERE nombre_proyecto = N'Proyecto S08 - Prueba estudiante';
+
+-- Eliminar exclusivamente el proyecto creado en el ejercicio 17
+DELETE FROM dbo.proyecto
+WHERE nombre_proyecto = N'Proyecto S08 - Prueba estudiante';
+
+-- Comprobar que ya no exista
+SELECT id_proyecto, nombre_proyecto
+FROM dbo.proyecto
+WHERE nombre_proyecto = N'Proyecto S08 - Prueba estudiante';
+Observaciones:
+El último SELECT debería devolver cero filas si la eliminación se realizó correctamente. Ejecuta este ejercicio después del 17 y el 18. No lo ejecutes si el nombre corresponde a un registro que no creaste; una clave foránea también podría impedir eliminarlo.
+
+----------------------------------------
+
+EJERCICIO 20
+Consulta / respuesta:
+SELECT nombre_metrica, AVG(valor) AS promedio
+FROM dbo.metrica
+GROUP BY nombre_metrica
+HAVING AVG(valor) > 0.80;
+Observaciones:
+Muestra cada tipo de métrica cuyo promedio sea estrictamente superior a 0.80, junto con su promedio. La consulta utiliza solo la tabla metrica.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 1
+Consulta:
+SELECT fuente, COUNT(*) AS cantidad_datasets
+FROM dbo.dataset
+GROUP BY fuente;
+Interpretación:
+El resultado muestra la cantidad de datasets por cada fuente. El conteo exacto se obtiene al ejecutar la consulta.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 2
+Consulta:
+SELECT id_dataset, nombre, tamanio_filas
+FROM dbo.dataset
+WHERE tamanio_filas IS NULL;
+Interpretación:
+Lista los datasets cuyo tamaño de filas no está informado.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 3
+Consulta:
+SELECT MAX(tamanio_filas) AS tamanio_maximo_informado
+FROM dbo.dataset;
+Interpretación:
+Devuelve el mayor tamaño de filas entre los valores informados; MAX ignora los NULL.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 4
+Consulta:
+SELECT nombre_metrica, AVG(valor) AS promedio
+FROM dbo.metrica
+GROUP BY nombre_metrica;
+Interpretación:
+Presenta el promedio de valor para cada tipo de métrica.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 5
+Consulta:
+SELECT nombre_metrica, AVG(valor) AS promedio
+FROM dbo.metrica
+GROUP BY nombre_metrica
+HAVING AVG(valor) > 0.80;
+Interpretación:
+Devuelve únicamente los tipos de métrica cuyo promedio supera 0.80.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 6
+Consulta:
+SELECT algoritmo, COUNT(*) AS cantidad_modelos
+FROM dbo.modelo
+GROUP BY algoritmo;
+Interpretación:
+Cuenta cuántos modelos existen para cada algoritmo.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 7
+Consulta:
+SELECT id_modelo, nombre, version
+FROM dbo.modelo
+WHERE version LIKE N'1.2%';
+Interpretación:
+Muestra los modelos cuya versión comienza por 1.2, por ejemplo 1.2, 1.2.1 o 1.20.
+
+----------------------------------------
